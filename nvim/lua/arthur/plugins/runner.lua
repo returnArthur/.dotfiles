@@ -31,6 +31,10 @@ return {
 			helpers.shell_handler(cmd)(bufnr)
 		end)
 
-		utils.map("n", "<leader><Space>", runner.run, { desc = "Runner" })
+		utils.map("n", "<leader><Space>", function()
+			local cur_win = vim.api.nvim_get_current_win()
+			require("runner").run()
+			vim.api.nvim_set_current_win(cur_win) -- jump back to code window
+		end, { desc = "Runner" })
 	end,
 }

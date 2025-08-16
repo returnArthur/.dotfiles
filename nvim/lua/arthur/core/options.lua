@@ -2,15 +2,17 @@ vim.cmd("let g:netrw_liststyle = 3")
 
 local opt = vim.opt
 
+opt.winborder = "rounded"
 opt.relativenumber = true
 opt.number = true
-opt.backup = false
+--opt.backup = true
 
 -- tabs & indentation
 opt.tabstop = 2 -- 2 spaces for tabs (prettier default)
 opt.shiftwidth = 2 -- 2 spaces for indent width
 opt.expandtab = true -- expand tab to spaces
 opt.autoindent = true -- copy indent from current line when starting new one
+opt.mouse = ""
 
 opt.wrap = true
 
@@ -38,3 +40,5 @@ opt.splitbelow = true -- split horizontal window to the bottom
 
 -- turn off swapfile
 opt.swapfile = false
+
+opt.undofile = true
