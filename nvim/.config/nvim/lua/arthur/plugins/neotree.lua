@@ -61,7 +61,6 @@ return {
             -- vim.fn.sign_define("DiagnosticSignInfo", { text = " ", texthl = "DiagnosticSignInfo" })
             -- vim.fn.sign_define("DiagnosticSignHint", { text = "󰌵", texthl = "DiagnosticSignHint" })
 
-            vim.keymap.set("n", "<leader>e", "<Cmd>Neotree reveal<CR>")
 
             require("neo-tree").setup({
                 close_if_last_window = false, -- Close Neo-tree if it is the last window left in the tab
@@ -254,7 +253,7 @@ return {
                 filesystem = {
                     filtered_items = {
                         visible = false, -- when true, they will just be displayed differently than normal items
-                        hide_dotfiles = true,
+                        hide_dotfiles = false,
                         hide_gitignored = true,
                         hide_hidden = true, -- only works on Windows for hidden files/directories
                         hide_by_name = {
