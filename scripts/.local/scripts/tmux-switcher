@@ -6,7 +6,9 @@ if [[ -z "$sessions" ]]; then
     exit 0
 fi
 
-session=$(echo "$sessions" | fzf)
+session=$(echo "$sessions" | fzf \
+    --bind "ctrl-l:execute(tmux kill-session -t {1} && echo 'Killed {1}')+reload(tmux list-sessions -F '#{session_name}')")
+
 [[ -z "$session" ]] && exit 0
 
 if [[ -n "$TMUX" ]]; then

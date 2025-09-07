@@ -5,9 +5,9 @@ font_family      JetBrainsMono Nerd Font
 enable_ligatures yes
 
 # background_opacity 0.7
-font_size 18
+font_size 16
 
 # BEGIN_KITTY_THEME
-# Tokyo Night
+# GitHub Dark High Contrast
 include current-theme.conf
 # END_KITTY_THEME

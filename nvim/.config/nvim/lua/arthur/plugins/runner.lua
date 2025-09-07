@@ -4,11 +4,11 @@ return {
 	config = function()
 		local runner = require("runner")
 		local helpers = require("runner.handlers.helpers")
-		local utils = require("arthur.core.utils") -- ✅ this was missing
+		local utils = require("arthur.core.utils")
 
 		runner.setup({
 			position = "right",
-			width = 35,
+			width = 25,
 			height = 10,
 		})
 
@@ -31,10 +31,17 @@ return {
 			helpers.shell_handler(cmd)(bufnr)
 		end)
 
+		-- JavaScript
+		runner.set_handler("javascript", function(bufnr)
+			local cmd = "node " .. vim.fn.expand("%")
+			helpers.shell_handler(cmd)(bufnr)
+		end)
+
 		utils.map("n", "<leader><Space>", function()
 			local cur_win = vim.api.nvim_get_current_win()
 			require("runner").run()
-			vim.api.nvim_set_current_win(cur_win) -- jump back to code window
+			vim.api.nvim_set_current_win(cur_win)
 		end, { desc = "Runner" })
 	end,
 }
+
