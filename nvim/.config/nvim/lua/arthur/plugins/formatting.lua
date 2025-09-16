@@ -27,7 +27,7 @@ return {
 		})
 
 		-- Format manually with <C-l>
-		vim.keymap.set({ "n", "v" }, "<C-l>", function()
+		vim.keymap.set({ "n", "v" }, "<leader>fl", function()
 			conform.format({
 				lsp_fallback = true,
 				async = false,

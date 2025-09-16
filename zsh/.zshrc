@@ -108,3 +108,5 @@ alias vim="nvim"
 alias t="tmux"
 # Generated for envman. Do not edit.
 [ -s "$HOME/.config/envman/load.sh" ] && source "$HOME/.config/envman/load.sh"
+export PATH="$PATH:$(npm prefix -g)/bin"
+export PATH="$HOME/.npm-global/bin:$PATH"

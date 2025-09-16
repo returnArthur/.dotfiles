@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-
+#NOTE: working
 sessions=$(tmux list-sessions -F "#{session_name}")
 if [[ -z "$sessions" ]]; then
     echo "No tmux sessions available."
