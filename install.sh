@@ -1,0 +1,101 @@
+#!/usr/bin/env bash
+# -----------------------------------------
+# 🚀 Arch Linux Dotfiles Setup Installer
+# -----------------------------------------
+
+set -e  # Exit on error
+
+echo "==> Updating system..."
+sudo pacman -Syu --noconfirm
+
+# -----------------------------------------------------
+# 0. GNU Stow
+# -----------------------------------------------------
+echo "==> Installing GNU Stow..."
+sudo pacman -S --needed --noconfirm stow
+
+echo "==> Using stow to manage dotfiles..."
+# Example: stow hypr -t ~
+# Uncomment and modify the below line if needed
+# stow -t ~ hypr kitty nvim rofi scripts tmux waybar zsh
+
+# -----------------------------------------------------
+# 1. TPM (Tmux Plugin Manager)
+# -----------------------------------------------------
+echo "==> Setting up TPM..."
+if [ ! -d ~/.tmux/plugins/tpm ]; then
+  git clone https://github.com/tmux-plugins/tpm ~/.tmux/plugins/tpm
+else
+  echo "TPM already installed."
+fi
+
+# -----------------------------------------------------
+# 2. Fonts
+# -----------------------------------------------------
+echo "==> Installing fonts..."
+sudo pacman -S --needed --noconfirm \
+  ttf-nerd-fonts-symbols \
+  ttf-nerd-fonts-symbols-common \
+  noto-fonts \
+  noto-fonts-emoji \
+  ttf-dejavu \
+  ttf-jetbrains-mono-nerd
+
+# AUR fonts via yay
+if ! command -v yay &>/dev/null; then
+  echo "==> Installing yay (AUR helper)..."
+  sudo pacman -S --needed --noconfirm git base-devel
+  git clone https://aur.archlinux.org/yay.git /tmp/yay
+  cd /tmp/yay && makepkg -si --noconfirm
+  cd -
+fi
+
+echo "==> Installing AUR fonts..."
+yay -S --needed --noconfirm ttf-font-awesome-4 ttf-material-design-icons
+
+echo "==> Refreshing font cache..."
+fc-cache -fv
+
+# -----------------------------------------------------
+# 3. Audio (PipeWire setup)
+# -----------------------------------------------------
+echo "==> Removing old PulseAudio packages..."
+sudo pacman -Rns --noconfirm pulseaudio pulseaudio-alsa pulseaudio-bluetooth pulseaudio-zeroconf pulseaudio-jack || true
+
+echo "==> Installing PipeWire and components..."
+sudo pacman -S --needed --noconfirm \
+  pipewire pipewire-pulse pipewire-alsa pipewire-jack wireplumber \
+  pavucontrol bluez bluez-utils
+
+echo "==> Enabling audio and bluetooth services..."
+systemctl --user enable --now pipewire pipewire-pulse wireplumber
+sudo systemctl enable --now bluetooth
+
+# -----------------------------------------------------
+# 4. Nvim & Hyprland (Minimal install)
+# -----------------------------------------------------
+echo "==> Installing base tools for Nvim & Hyprland..."
+sudo pacman -S --needed --noconfirm npm ripgrep fzf unzip \
+  dolphin nvim hyprland yazi curl wget rofi waybar hyprshot
+
+# -----------------------------------------------------
+# 5. Greeter (tuigreet + greetd)
+# -----------------------------------------------------
+echo "==> Installing tuigreet..."
+yay -S --needed --noconfirm greetd-tuigreet
+
+echo "==> Configuring greetd..."
+sudo bash -c 'cat > /etc/greetd/config.toml' <<'EOF'
+[terminal]
+vt = 1
+
+[default_session]
+command = "tuigreet --cmd Hyprland"
+user = "greeter"
+EOF
+
+echo "==> Enabling greetd service..."
+sudo systemctl enable --now greetd.service
+
+echo "✅ Setup complete! Reboot your system to apply all changes."
+
