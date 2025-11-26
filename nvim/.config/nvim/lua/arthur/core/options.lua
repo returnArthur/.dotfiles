@@ -6,6 +6,7 @@ opt.winborder = "rounded"
 opt.relativenumber = true
 opt.number = true
 --opt.backup = true
+--opt.guicursor = ""
 
 -- tabs & indentation
 opt.tabstop = 2 -- 2 spaces for tabs (prettier default)

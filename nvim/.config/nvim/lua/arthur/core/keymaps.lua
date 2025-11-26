@@ -2,7 +2,6 @@ vim.g.mapleader = " "
 
 local keymap = vim.keymap -- for conciseness
 
-
 keymap.set("n", "<leader>nh", ":nohl<CR>", { desc = "Clear search highlights" })
 
 -- increment/decrement numbers
@@ -27,5 +26,5 @@ keymap.set("n", "<leader>cc", "ggVG", { desc = "copy all" }) --copy all
 vim.keymap.set("n", "k", "v:count == 0 ? 'gk' : 'k'", { expr = true, silent = true })
 vim.keymap.set("n", "j", "v:count == 0 ? 'gj' : 'j'", { expr = true, silent = true })
 
---delets the whole line but donot remove the line
-vim.keymap.set({ "n", "i" }, "<C-k>", "<Esc>0D", { noremap = true })
+vim.keymap.set("n", "<leader>o", "o<Esc>", { silent = true })
+vim.keymap.set("n", "<leader>O", "O<Esc>", { silent = true })

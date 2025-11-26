@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # -----------------------------------------
-# 🚀 Arch Linux Dotfiles Setup Installer
+# 🚀 Arch Linux Dotfiles Setup Installer (SAFE VERSION)
 # -----------------------------------------
 
 set -e  # Exit on error
@@ -14,10 +14,21 @@ sudo pacman -Syu --noconfirm
 echo "==> Installing GNU Stow..."
 sudo pacman -S --needed --noconfirm stow
 
-echo "==> Using stow to manage dotfiles..."
-# Example: stow hypr -t ~
-# Uncomment and modify the below line if needed
-# stow -t ~ hypr kitty nvim rofi scripts tmux waybar zsh
+echo "==> Preparing dotfiles directory..."
+
+# Create dotfiles directory safely
+mkdir -p ~/Projects/dotfiles
+cd ~/Projects/dotfiles
+
+# Only run stow if folders exist
+for pkg in hypr kitty nvim rofi scripts tmux waybar zsh; do
+  if [ -d "$pkg" ]; then
+    echo "--> Stowing $pkg"
+    stow -t ~ "$pkg"
+  else
+    echo "WARNING: '$pkg' folder not found. Skipping."
+  fi
+done
 
 # -----------------------------------------------------
 # 1. TPM (Tmux Plugin Manager)
@@ -59,8 +70,8 @@ fc-cache -fv
 # -----------------------------------------------------
 # 3. Audio (PipeWire setup)
 # -----------------------------------------------------
-echo "==> Removing old PulseAudio packages..."
-sudo pacman -Rns --noconfirm pulseaudio pulseaudio-alsa pulseaudio-bluetooth pulseaudio-zeroconf pulseaudio-jack || true
+echo "==> Removing PulseAudio (safe)..."
+sudo pacman -Rns pulseaudio* || true
 
 echo "==> Installing PipeWire and components..."
 sudo pacman -S --needed --noconfirm \
@@ -76,7 +87,8 @@ sudo systemctl enable --now bluetooth
 # -----------------------------------------------------
 echo "==> Installing base tools for Nvim & Hyprland..."
 sudo pacman -S --needed --noconfirm npm ripgrep fzf unzip \
-  dolphin nvim hyprland yazi curl wget rofi waybar hyprshot
+  dolphin nvim hyprland yazi curl wget rofi waybar hyprshot \
+  nodejs npm
 
 # -----------------------------------------------------
 # 5. Greeter (tuigreet + greetd)
@@ -85,17 +97,24 @@ echo "==> Installing tuigreet..."
 yay -S --needed --noconfirm greetd-tuigreet
 
 echo "==> Configuring greetd..."
-sudo bash -c 'cat > /etc/greetd/config.toml' <<'EOF'
+
+# Ensure directory exists
+sudo mkdir -p /etc/greetd
+
+sudo tee /etc/greetd/config.toml >/dev/null <<EOF
 [terminal]
 vt = 1
 
 [default_session]
-command = "tuigreet --cmd Hyprland"
+command = "tuigreet --cmd hyprland"
 user = "greeter"
 EOF
 
 echo "==> Enabling greetd service..."
 sudo systemctl enable --now greetd.service
 
-echo "✅ Setup complete! Reboot your system to apply all changes."
+echo " "
+echo "========================================="
+echo "     ✅ Setup complete! Reboot now.      "
+echo "========================================="
 
